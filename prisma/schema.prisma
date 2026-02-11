@@ -1,0 +1,138 @@
+// schema.prisma
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// ─── NextAuth Required Models ───
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// ─── Application Models ───
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  emailVerified DateTime?
+  name          String?
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  // NextAuth relations
+  accounts      Account[]
+  sessions      Session[]
+  
+  // App relations
+  resumes       Resume[]
+  portfolio     Portfolio?
+  credits       Int       @default(10)
+  subscription  SubscriptionStatus @default(FREE)
+  jobApplications JobApplication[]
+}
+
+model Resume {
+  id            String    @id @default(cuid())
+  title         String
+  userId        String
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  content       Json      
+  
+  targetJobId   String?   
+  targetJob     JobApplication? @relation(fields: [targetJobId], references: [id])
+  atsScore      Int?
+  
+  templateId    String    @default("harvard-standard")
+  themeConfig   Json?
+  
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@index([userId])
+}
+
+model JobApplication {
+  id            String    @id @default(cuid())
+  userId        String
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  companyName   String
+  jobTitle      String
+  jobDescription String
+  
+  keywords      String?
+  status        AppStatus @default(DRAFT)
+  
+  resumes       Resume[]
+  
+  createdAt     DateTime  @default(now())
+}
+
+model Portfolio {
+  id            String    @id @default(cuid())
+  userId        String    @unique
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  slug          String    @unique
+  isPublished   Boolean   @default(false)
+  
+  heroHeadline  String?
+  aboutHtml     String?
+  
+  primaryColor  String    @default("#000000")
+  fontFamily    String    @default("Inter")
+  
+  viewCount     Int       @default(0)
+  updatedAt     DateTime  @updatedAt
+}
+
+enum AppStatus {
+  DRAFT
+  APPLIED
+  INTERVIEWING
+  OFFER_RECEIVED
+  REJECTED
+}
+
+enum SubscriptionStatus {
+  FREE
+  PRO
+  ENTERPRISE
+}
