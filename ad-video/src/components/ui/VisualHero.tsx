@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button } from './VisualJobMatch'; // We can reuse or make a basic button
+
 import { VisualLogo } from './VisualLogo';
 
 // Mocking the Button since likely it wasn't exported from VisualJobMatch properly or we need a clean one
