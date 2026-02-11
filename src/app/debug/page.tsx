@@ -1,13 +1,21 @@
 import { headers } from 'next/headers';
 import { auth } from '@/auth';
+import { prisma } from '@/lib/prisma';
 
 export default async function DebugPage() {
     const headersList = await headers();
     const session = await auth();
 
+    let dbStatus = "Checking...";
+    try {
+        await prisma.user.count();
+        dbStatus = "Connected (OK)";
+    } catch (e: any) {
+        dbStatus = `Failed: ${e.message}`;
+    }
+
     const envVars = {
         NEXTAUTH_URL: process.env.NEXTAUTH_URL,
-        AUTH_URL: process.env.AUTH_URL,
         VERCEL_URL: process.env.VERCEL_URL,
         NODE_ENV: process.env.NODE_ENV,
         AUTH_TRUST_HOST: process.env.AUTH_TRUST_HOST,
@@ -15,6 +23,7 @@ export default async function DebugPage() {
         HAS_AUTH_SECRET: !!process.env.AUTH_SECRET,
         HAS_GOOGLE_ID: !!process.env.GOOGLE_CLIENT_ID,
         HAS_GOOGLE_SECRET: !!process.env.GOOGLE_CLIENT_SECRET,
+        DB_STATUS: dbStatus
     };
 
     const requestHeaders = {
