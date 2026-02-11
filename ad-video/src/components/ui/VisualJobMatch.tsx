@@ -11,7 +11,7 @@ const CardTitle = ({ children, className }: { children: React.ReactNode, classNa
 const CardDescription = ({ children, className }: { children: React.ReactNode, className?: string }) => (
     <p className={`text-sm text-muted-foreground ${className}`}>{children}</p>
 );
-const Button = ({ children, className, variant }: { children: React.ReactNode, className?: string, variant?: string }) => (
+export const Button = ({ children, className, variant }: { children: React.ReactNode, className?: string, variant?: string }) => (
     <button className={`inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 h-9 px-4 py-2 ${variant === 'outline' ? 'border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground' : 'bg-primary text-primary-foreground shadow hover:bg-primary/90'
         } ${className}`}>
         {children}
