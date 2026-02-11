@@ -1,4 +1,4 @@
-import { AbsoluteFill, useCurrentFrame, interpolate, Img, Spring, useVideoConfig } from 'remotion';
+import { AbsoluteFill, useCurrentFrame, interpolate, Img, spring, useVideoConfig } from 'remotion';
 import { staticFile } from 'remotion';
 import { CinematicText } from '../../components/CinematicText';
 
