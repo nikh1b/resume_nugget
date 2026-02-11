@@ -11,7 +11,10 @@ export default async function DebugPage() {
         VERCEL_URL: process.env.VERCEL_URL,
         NODE_ENV: process.env.NODE_ENV,
         AUTH_TRUST_HOST: process.env.AUTH_TRUST_HOST,
-        // Don't show secrets
+        // Check for presence of secrets
+        HAS_AUTH_SECRET: !!process.env.AUTH_SECRET,
+        HAS_GOOGLE_ID: !!process.env.GOOGLE_CLIENT_ID,
+        HAS_GOOGLE_SECRET: !!process.env.GOOGLE_CLIENT_SECRET,
     };
 
     const requestHeaders = {
