@@ -9,7 +9,7 @@ export default function Home() {
   const navLinks = [
     { href: "/dashboard", label: "Dashboard" },
     { href: "#templates", label: "Templates" },
-    { href: "#about", label: "About" },
+    { href: "/about", label: "About" },
   ];
 
   return (
