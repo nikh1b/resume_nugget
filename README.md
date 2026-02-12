@@ -14,6 +14,12 @@ pnpm dev
 bun dev
 ```
 
+# AI Resume Builder
+
+![Vercel Deployment](https://therealsujitk-vercel-badge.vercel.app/?app=ai-resume-builder)
+
+An intelligent resume builder powered by Minimax/NVIDIA NIM.
+
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
