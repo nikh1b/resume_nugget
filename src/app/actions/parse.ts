@@ -71,7 +71,7 @@ export async function parseResume(formData: FormData) {
 
         // AI Extraction
         const { text: aiResponse } = await generateText({
-            model: google('gemini-1.5-flash'),
+            model: google('gemini-2.5-flash'),
             system: `You are a resume parser. Extract structured data into a valid JSON object matching the requested schema.
             IMPORTANT: Return ONLY the JSON object. Do not include markdown code blocks or any other text.
             If a field is missing, use "" or false. Do NOT omit any fields from the schema.`,

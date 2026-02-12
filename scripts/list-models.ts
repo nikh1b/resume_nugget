@@ -18,9 +18,11 @@ async function listModels() {
         if (data.error) {
             console.error('API Error:', data.error);
         } else {
-            console.log('Available Models:');
+            const fs = require('fs');
             // @ts-ignore
-            data.models?.forEach(m => console.log(`- ${m.name} (${m.supportedGenerationMethods?.join(', ')})`));
+            const modelList = data.models?.map(m => `- ${m.name} (${m.supportedGenerationMethods?.join(', ')})`).join('\n');
+            fs.writeFileSync('models.json', modelList);
+            console.log('Models written to models.json');
         }
     } catch (error) {
         console.error('Fetch error:', error);
