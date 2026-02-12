@@ -7,35 +7,14 @@ import Credentials from "next-auth/providers/credentials"
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
     trustHost: true,
-    // adapter: PrismaAdapter(prisma),
+    // adapter: PrismaAdapter(prisma), // Disabled for Safety Mode
     session: { strategy: "jwt" },
+    debug: true, // Enable debug logs
     providers: [
         Google({
-            clientId: process.env.GOOGLE_CLIENT_ID,
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+            clientId: process.env.GOOGLE_CLIENT_ID || process.env.GOOGLE_ID,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET || process.env.GOOGLE_SECRET,
         }),
-        Credentials({
-            name: "Dev Login",
-            credentials: {
-                email: { label: "Email", type: "email", placeholder: "dev@example.com" },
-            },
-            async authorize(credentials) {
-                if (!credentials?.email) return null;
-                const email = credentials.email as string;
-
-                // Create or return existing user for dev/bypassing
-                const user = await prisma.user.upsert({
-                    where: { email },
-                    update: {},
-                    create: {
-                        email,
-                        name: "Dev User",
-                        image: "",
-                    },
-                });
-                return user;
-            }
-        })
     ],
     callbacks: {
         session({ session, token }) {
