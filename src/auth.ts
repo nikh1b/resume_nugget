@@ -7,7 +7,7 @@ import Credentials from "next-auth/providers/credentials"
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
     trustHost: true,
-    adapter: PrismaAdapter(prisma),
+    // adapter: PrismaAdapter(prisma),
     session: { strategy: "jwt" },
     providers: [
         Google({
