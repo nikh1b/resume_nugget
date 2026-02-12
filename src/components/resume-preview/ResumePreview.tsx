@@ -6,6 +6,11 @@ import {
     IvyTemplate,
     ModernTemplate,
     CreativeTemplate,
+    MinimalistTemplate,
+    ExecutiveTemplate,
+    StartupTemplate,
+    TechTemplate,
+    ClassicTemplate,
     type TemplateName,
 } from '@/components/pdf-templates';
 import { Loader2 } from 'lucide-react';
@@ -34,6 +39,16 @@ export const ResumePreview = () => {
                 return <ModernTemplate resume={resume} />;
             case 'creative':
                 return <CreativeTemplate resume={resume} />;
+            case 'minimalist':
+                return <MinimalistTemplate resume={resume} />;
+            case 'executive':
+                return <ExecutiveTemplate resume={resume} />;
+            case 'startup':
+                return <StartupTemplate resume={resume} />;
+            case 'tech':
+                return <TechTemplate resume={resume} />;
+            case 'classic':
+                return <ClassicTemplate resume={resume} />;
             default:
                 return <IvyTemplate resume={resume} />;
         }

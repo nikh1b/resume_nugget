@@ -9,6 +9,11 @@ import {
     IvyTemplate,
     ModernTemplate,
     CreativeTemplate,
+    MinimalistTemplate,
+    ExecutiveTemplate,
+    StartupTemplate,
+    TechTemplate,
+    ClassicTemplate,
     TEMPLATE_INFO,
     type TemplateName,
 } from '@/components/pdf-templates';
@@ -25,6 +30,16 @@ export function PdfDownloadButton() {
                 return <ModernTemplate resume={resume} />;
             case 'creative':
                 return <CreativeTemplate resume={resume} />;
+            case 'minimalist':
+                return <MinimalistTemplate resume={resume} />;
+            case 'executive':
+                return <ExecutiveTemplate resume={resume} />;
+            case 'startup':
+                return <StartupTemplate resume={resume} />;
+            case 'tech':
+                return <TechTemplate resume={resume} />;
+            case 'classic':
+                return <ClassicTemplate resume={resume} />;
         }
     };
 

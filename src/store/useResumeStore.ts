@@ -12,8 +12,8 @@ interface ResumeState {
     markAsSaved: () => void;
     updatePersonalInfo: (info: Partial<Resume['personalInfo']>) => void;
     // Template
-    selectedTemplate: 'ivy' | 'modern' | 'creative';
-    setTemplate: (template: 'ivy' | 'modern' | 'creative') => void;
+    selectedTemplate: 'ivy' | 'modern' | 'creative' | 'minimalist' | 'executive' | 'startup' | 'tech' | 'classic';
+    setTemplate: (template: 'ivy' | 'modern' | 'creative' | 'minimalist' | 'executive' | 'startup' | 'tech' | 'classic') => void;
 
     // Education
     addEducation: () => void;
@@ -50,7 +50,7 @@ const initialResume: Resume = {
     projects: [],
 };
 
-const initialTemplate: 'ivy' | 'modern' | 'creative' = 'ivy';
+const initialTemplate: 'ivy' | 'modern' | 'creative' | 'minimalist' | 'executive' | 'startup' | 'tech' | 'classic' = 'ivy';
 
 export const useResumeStore = create<ResumeState>()(
     persist(
