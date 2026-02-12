@@ -7,7 +7,18 @@ import { revalidatePath } from 'next/cache';
 
 export async function getOrCreatePortfolio(): Promise<PortfolioConfig> {
     const session = await auth();
-    if (!session?.user?.id) throw new Error('Unauthorized');
+    // DEMO MODE: Mock portfolio if no session
+    if (!session?.user?.id) {
+        return {
+            id: 'demo-portfolio-id',
+            slug: 'demo-user',
+            heroHeadline: 'Product Designer & Developer',
+            aboutHtml: '<p>I build <strong>accessible</strong>, pixel-perfect, and performant web experiences.</p>',
+            primaryColor: '#7c3aed',
+            fontFamily: 'Inter',
+            isPublished: false,
+        };
+    }
 
     let portfolio = await prisma.portfolio.findUnique({
         where: { userId: session.user.id },
@@ -43,7 +54,11 @@ export async function getOrCreatePortfolio(): Promise<PortfolioConfig> {
 
 export async function savePortfolio(data: Omit<PortfolioConfig, 'id'> & { id: string }) {
     const session = await auth();
-    if (!session?.user?.id) throw new Error('Unauthorized');
+
+    // DEMO MODE: Allow save (no-op)
+    if (!session?.user?.id || data.id === 'demo-portfolio-id') {
+        return { success: true };
+    }
 
     try {
         await prisma.portfolio.update({
