@@ -1,9 +1,11 @@
-import { redirect } from 'next/navigation';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { FileText, Zap, Target, Sparkles, ArrowRight, Menu } from 'lucide-react';
+import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
+
+import { Logo } from '@/components/Logo';
 
 export default function Home() {
-  redirect('/builder/resume/demo');
-
-  // Original Code Below (Unreachable)
   const navLinks = [
     { href: "/dashboard", label: "Dashboard" },
     { href: "#templates", label: "Templates" },
@@ -26,9 +28,9 @@ export default function Home() {
         </div>
 
         <div className="flex items-center gap-3">
-          <Link href="/api/auth/signin" className="hidden sm:block">
+          <Link href="/builder/resume/demo" className="hidden sm:block">
             <Button className="bg-lime-500 hover:bg-lime-400 text-black font-bold px-6 rounded-full text-sm">
-              Sign In
+              Start Building
             </Button>
           </Link>
 
@@ -54,9 +56,9 @@ export default function Home() {
                       {link.label}
                     </Link>
                   ))}
-                  <Link href="/api/auth/signin">
+                  <Link href="/builder/resume/demo">
                     <Button className="w-full bg-lime-500 hover:bg-lime-400 text-black font-bold rounded-full">
-                      Sign In
+                      Start Building
                     </Button>
                   </Link>
                 </div>
@@ -81,7 +83,7 @@ export default function Home() {
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Link href="/builder/resume/new">
+          <Link href="/builder/resume/demo">
             <Button className="bg-red-500 hover:bg-red-400 text-white font-bold px-8 h-12 text-base rounded-full">
               Start Building
             </Button>
@@ -97,7 +99,7 @@ export default function Home() {
       {/* Feature Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 px-8 pb-16 max-w-6xl mx-auto w-full">
         {/* ... existing feature cards ... */}
-        <Link href="/builder/resume/new" className="group bg-[#111] border border-white/10 rounded-2xl p-6 hover:border-white/20 transition-all duration-300 cursor-pointer block">
+        <Link href="/builder/resume/demo" className="group bg-[#111] border border-white/10 rounded-2xl p-6 hover:border-white/20 transition-all duration-300 cursor-pointer block">
           <div className="flex flex-col items-center text-center gap-3">
             <div className="p-3 rounded-full bg-red-500/10">
               <FileText className="h-6 w-6 text-red-400" />
@@ -106,7 +108,7 @@ export default function Home() {
             <span className="text-gray-500 text-xs">Drag-and-drop editor with live preview</span>
           </div>
         </Link>
-        <Link href="/builder/resume/new" className="group bg-[#111] border border-white/10 rounded-2xl p-6 hover:border-white/20 transition-all duration-300 cursor-pointer block">
+        <Link href="/builder/resume/demo" className="group bg-[#111] border border-white/10 rounded-2xl p-6 hover:border-white/20 transition-all duration-300 cursor-pointer block">
           <div className="flex flex-col items-center text-center gap-3">
             <div className="p-3 rounded-full bg-amber-500/10">
               <Sparkles className="h-6 w-6 text-amber-400" />
@@ -115,7 +117,7 @@ export default function Home() {
             <span className="text-gray-500 text-xs">Rewrite bullet points with powerful AI</span>
           </div>
         </Link>
-        <Link href="/builder/resume/new" className="group bg-[#111] border border-white/10 rounded-2xl p-6 hover:border-white/20 transition-all duration-300 cursor-pointer block">
+        <Link href="/builder/resume/demo" className="group bg-[#111] border border-white/10 rounded-2xl p-6 hover:border-white/20 transition-all duration-300 cursor-pointer block">
           <div className="flex flex-col items-center text-center gap-3">
             <div className="p-3 rounded-full bg-blue-500/10">
               <Target className="h-6 w-6 text-blue-400" />
@@ -124,7 +126,7 @@ export default function Home() {
             <span className="text-gray-500 text-xs">Match score + missing keyword analysis</span>
           </div>
         </Link>
-        <Link href="/builder/resume/new" className="group bg-[#111] border border-white/10 rounded-2xl p-6 hover:border-white/20 transition-all duration-300 cursor-pointer block">
+        <Link href="/builder/resume/demo" className="group bg-[#111] border border-white/10 rounded-2xl p-6 hover:border-white/20 transition-all duration-300 cursor-pointer block">
           <div className="flex flex-col items-center text-center gap-3">
             <div className="p-3 rounded-full bg-purple-500/10">
               <Zap className="h-6 w-6 text-purple-400" />
@@ -158,7 +160,7 @@ export default function Home() {
               <div className="p-6">
                 <h3 className="text-xl font-bold text-white mb-2">Ivy League</h3>
                 <p className="text-gray-400 text-sm mb-4">Clean, serif-based design. Perfect for academic and corporate roles.</p>
-                <Link href="/builder/resume/new?template=ivy">
+                <Link href="/builder/resume/demo?template=ivy">
                   <Button size="sm" variant="outline" className="w-full border-white/10 text-white hover:bg-lime-500 hover:text-black">Use Template</Button>
                 </Link>
               </div>
@@ -181,7 +183,7 @@ export default function Home() {
               <div className="p-6">
                 <h3 className="text-xl font-bold text-white mb-2">Modern Tech</h3>
                 <p className="text-gray-400 text-sm mb-4">Two-column layout with a dark sidebar. Ideal for developers and designers.</p>
-                <Link href="/builder/resume/new?template=modern">
+                <Link href="/builder/resume/demo?template=modern">
                   <Button size="sm" variant="outline" className="w-full border-white/10 text-white hover:bg-purple-500 hover:text-white">Use Template</Button>
                 </Link>
               </div>
@@ -201,7 +203,7 @@ export default function Home() {
               <div className="p-6">
                 <h3 className="text-xl font-bold text-white mb-2">Creative Studio</h3>
                 <p className="text-gray-400 text-sm mb-4">Bold headers and vibrant accents. Stand out for creative positions.</p>
-                <Link href="/builder/resume/new?template=creative">
+                <Link href="/builder/resume/demo?template=creative">
                   <Button size="sm" variant="outline" className="w-full border-white/10 text-white hover:bg-red-500 hover:text-white">Use Template</Button>
                 </Link>
               </div>
@@ -209,10 +211,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-
-
-
 
       {/* About Section */}
       <section id="about" className="py-24 border-t border-white/5 scroll-mt-32">
