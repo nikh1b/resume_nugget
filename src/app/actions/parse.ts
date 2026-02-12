@@ -2,12 +2,11 @@
 
 import { auth } from '@/auth';
 import { generateText, generateObject } from 'ai';
-import { createOpenAI } from '@ai-sdk/openai';
+import { createGoogleGenerativeAI } from '@ai-sdk/google';
 import { z } from 'zod';
 
-const nvidia = createOpenAI({
-    apiKey: process.env.NVIDIA_API_KEY,
-    baseURL: process.env.NVIDIA_BASE_URL,
+const google = createGoogleGenerativeAI({
+    apiKey: process.env.GOOGLE_GENERATIVE_AI_API_KEY,
 });
 
 import { randomUUID } from 'crypto';
@@ -72,7 +71,7 @@ export async function parseResume(formData: FormData) {
 
         // AI Extraction
         const { text: aiResponse } = await generateText({
-            model: nvidia(process.env.NVIDIA_MODEL || 'minimaxai/minimax-m2.1'),
+            model: google('models/gemini-1.5-flash'),
             system: `You are a resume parser. Extract structured data into a valid JSON object matching the requested schema.
             IMPORTANT: Return ONLY the JSON object. Do not include markdown code blocks or any other text.
             If a field is missing, use "" or false. Do NOT omit any fields from the schema.`,
