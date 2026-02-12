@@ -9,7 +9,8 @@ export default async function DashboardPage() {
     const session = await auth();
     if (!session?.user) redirect('/api/auth/signin');
 
-    const resumes = await getUserResumes();
+    // const resumes = await getUserResumes();
+    const resumes: any[] = []; // Temporary fix: Bypass DB for now
 
     return (
         <div className="min-h-screen bg-[#0a0a0a]">
