@@ -49,10 +49,11 @@ const responseSchema = z.object({
 });
 
 export async function parseResume(formData: FormData) {
-    const session = await auth();
-    if (!session?.user) {
-        return { success: false, error: 'Unauthorized' };
-    }
+    // Auth check removed for Demo Mode
+    // const session = await auth();
+    // if (!session?.user) {
+    //     return { success: false, error: 'Unauthorized' };
+    // }
 
     const file = formData.get('file') as File;
     if (!file) {

@@ -11,10 +11,11 @@ const nvidia = createOpenAI({
 });
 
 export async function enhanceDescription(text: string) {
-    const session = await auth();
-    if (!session?.user) {
-        throw new Error('Unauthorized');
-    }
+    // Auth check removed for Demo Mode
+    // const session = await auth();
+    // if (!session?.user) {
+    //     throw new Error('Unauthorized');
+    // }
 
     try {
         const { text: enhancedText } = await generateText({
@@ -31,10 +32,11 @@ export async function enhanceDescription(text: string) {
 }
 
 export async function analyzeJobMatch(resumeContent: string, jobDescription: string) {
-    const session = await auth();
-    if (!session?.user) {
-        throw new Error('Unauthorized');
-    }
+    // Auth check removed for Demo Mode
+    // const session = await auth();
+    // if (!session?.user) {
+    //     throw new Error('Unauthorized');
+    // }
 
     try {
         const { text: aiResponse } = await generateText({
