@@ -219,15 +219,15 @@ export default function Home() {
           <p className="text-gray-400 text-lg leading-relaxed mb-8">
             I built Resume Nugget because most resume builders are frustrating. They lock features behind paywalls, force you into generic templates, or hold your data hostage.
             <br /><br />
-            Resume Nugget is different. It uses <strong>NVIDIA NIM AI</strong> (MiniMax) to rewrite your descriptions, analyzes your resume against job descriptions to find missing keywords, and gives you full control over your data with direct PDF exports.
+            Resume Nugget is different. It uses <strong>Google Gemini AI</strong> (Flash 2.5) to rewrite your descriptions, analyzes your resume against job descriptions to find missing keywords, and gives you full control over your data with direct PDF exports.
           </p>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 py-8 border-t border-white/5 border-b mb-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 py-8 border-t border-white/5 border-b border-white/5 mb-16">
             <div>
               <div className="text-3xl font-black text-white">100%</div>
               <div className="text-xs text-gray-500 uppercase tracking-widest mt-1">Free</div>
             </div>
             <div>
-              <div className="text-3xl font-black text-white">3+</div>
+              <div className="text-3xl font-black text-white">8+</div>
               <div className="text-xs text-gray-500 uppercase tracking-widest mt-1">Templates</div>
             </div>
             <div>
@@ -237,6 +237,30 @@ export default function Home() {
             <div>
               <div className="text-3xl font-black text-white">ATS</div>
               <div className="text-xs text-gray-500 uppercase tracking-widest mt-1">Friendly</div>
+            </div>
+          </div>
+
+          {/* Meet The Developer */}
+          <div className="text-left bg-[#111] p-8 rounded-2xl border border-white/10">
+            <h3 className="text-2xl font-bold text-white mb-4">Meet the Developer</h3>
+            <div className="flex flex-col md:flex-row gap-6 items-start">
+              <div className="flex-1">
+                <p className="text-gray-400 leading-relaxed mb-4">
+                  Hi, I'm <strong>Nikhil</strong>. I'm a Full Stack Developer and student passionate about building tools that actually help people.
+                </p>
+                <p className="text-gray-400 leading-relaxed">
+                  I created this project to solve a personal pain point: building a great resume shouldn't be hard or expensive.
+                  When I'm not coding, I'm exploring new AI technologies, contributing to open source, or working on my next big idea.
+                </p>
+              </div>
+              <div className="shrink-0 bg-white/5 p-4 rounded-xl border border-white/5">
+                <p className="text-sm text-gray-500 font-mono mb-2">Let's Connect:</p>
+                <div className="flex flex-col gap-2">
+                  <a href="https://github.com/nikh1b" target="_blank" className="text-lime-400 hover:underline text-sm font-medium">github.com/nikh1b</a>
+                  <span className="text-gray-400 text-sm">Full Stack Developer</span>
+                  <span className="text-gray-400 text-sm">Open Source Enthusiast</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
