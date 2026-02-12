@@ -5,6 +5,7 @@ import { ResumePreview } from '@/components/resume-preview/ResumePreview';
 import { Button } from '@/components/ui/button';
 import { Save, Bot } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { Resume } from '@/lib/types';
 import { useResumeStore } from '@/store/useResumeStore';
 import { saveResume } from '@/app/actions/resume';
@@ -69,6 +70,16 @@ export default function ResumeEditor({ initialData, id, initialTemplate }: Resum
         return () => clearInterval(interval);
     }, [_hasUnsavedChanges, resume, isSaving, markAsSaved]);
 
+    // JOB MATCH: Auto-open based on URL param
+    const searchParams = useSearchParams();
+    const [isJobMatchOpen, setIsJobMatchOpen] = useState(false);
+
+    useEffect(() => {
+        if (searchParams.get('open') === 'job-match') {
+            setIsJobMatchOpen(true);
+        }
+    }, [searchParams]);
+
 
 
 
@@ -114,7 +125,7 @@ export default function ResumeEditor({ initialData, id, initialTemplate }: Resum
                 </div>
 
                 <div className="flex items-center gap-2">
-                    <Sheet>
+                    <Sheet open={isJobMatchOpen} onOpenChange={setIsJobMatchOpen}>
                         <SheetTrigger asChild>
                             <Button variant="ghost" size="icon" className="text-gray-400 hover:text-white sm:hidden">
                                 <Bot className="h-5 w-5" />
@@ -151,7 +162,7 @@ export default function ResumeEditor({ initialData, id, initialTemplate }: Resum
                     {/* Desktop Buttons */}
                     <div className="hidden sm:flex items-center gap-2">
                         <TemplateSelector />
-                        <Sheet>
+                        <Sheet open={isJobMatchOpen} onOpenChange={setIsJobMatchOpen}>
                             <SheetTrigger asChild>
                                 <Button variant="outline" size="sm" className="border-white/10 text-gray-300 hover:bg-white/5 hover:text-white">
                                     <Bot className="mr-2 h-4 w-4 text-blue-400" /> Job Match

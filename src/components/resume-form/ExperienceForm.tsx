@@ -3,9 +3,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useResumeStore } from '@/store/useResumeStore';
-import { Plus, Trash2, Sparkles, Loader2 } from 'lucide-react';
+import { Plus, Trash2, Sparkles, Loader2, Wand2 } from 'lucide-react';
 import { useState } from 'react';
-import { enhanceDescription } from '@/app/actions/ai';
+import { enhanceDescription, generateExperienceDescription } from '@/app/actions/ai';
 
 export const ExperienceForm = () => {
     const { resume, addExperience, removeExperience, updateExperience } = useResumeStore();
@@ -13,7 +13,27 @@ export const ExperienceForm = () => {
     const [loadingIndices, setLoadingIndices] = useState<number[]>([]);
 
     const handleEnhance = async (index: number, text: string) => {
-        if (!text || text.length < 10) return;
+        // Mode: Generate from scratch
+        if (!text) {
+            const exp = experience[index];
+            if (!exp.position) return; // Need at least a position
+
+            setLoadingIndices(prev => [...prev, index]);
+            try {
+                const result = await generateExperienceDescription(exp.company || '', exp.position);
+                if (result.success && result.text) {
+                    updateExperience(index, { description: result.text });
+                }
+            } catch (error) {
+                console.error(error);
+            } finally {
+                setLoadingIndices(prev => prev.filter(i => i !== index));
+            }
+            return;
+        }
+
+        // Mode: Enhance existing text
+        if (text.length < 10) return;
 
         setLoadingIndices(prev => [...prev, index]);
         try {
@@ -95,15 +115,17 @@ export const ExperienceForm = () => {
                                 variant="ghost"
                                 size="sm"
                                 onClick={() => handleEnhance(index, exp.description)}
-                                disabled={loadingIndices.includes(index) || !exp.description}
-                                className="h-6 px-2 text-xs text-purple-600 hover:text-purple-700 hover:bg-purple-50"
+                                disabled={loadingIndices.includes(index) || (!exp.description && !exp.position)}
+                                className={`h-6 px-2 text-xs ${!exp.description ? 'text-blue-600 hover:text-blue-700 hover:bg-blue-50 font-medium' : 'text-purple-600 hover:text-purple-700 hover:bg-purple-50'}`}
                             >
                                 {loadingIndices.includes(index) ? (
                                     <Loader2 className="mr-1 h-3 w-3 animate-spin" />
+                                ) : !exp.description ? (
+                                    <Wand2 className="mr-1 h-3 w-3" />
                                 ) : (
                                     <Sparkles className="mr-1 h-3 w-3" />
                                 )}
-                                Enhance with AI
+                                {!exp.description ? 'Generate with AI' : 'Enhance with AI'}
                             </Button>
                         </div>
                         <Textarea

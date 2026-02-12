@@ -117,7 +117,7 @@ export default function Home() {
             <span className="text-gray-500 text-xs">Rewrite bullet points with powerful AI</span>
           </div>
         </Link>
-        <Link href="/builder/resume/demo" className="group bg-[#111] border border-white/10 rounded-2xl p-6 hover:border-white/20 transition-all duration-300 cursor-pointer block">
+        <Link href="/builder/resume/demo?open=job-match" className="group bg-[#111] border border-white/10 rounded-2xl p-6 hover:border-white/20 transition-all duration-300 cursor-pointer block">
           <div className="flex flex-col items-center text-center gap-3">
             <div className="p-3 rounded-full bg-blue-500/10">
               <Target className="h-6 w-6 text-blue-400" />

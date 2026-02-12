@@ -78,3 +78,24 @@ export async function analyzeJobMatch(resumeContent: string, jobDescription: str
         return { success: false, error: 'Failed to analyze job match' };
     }
 }
+
+export async function generateExperienceDescription(company: string, position: string) {
+    // Auth check removed for Demo Mode
+    // const session = await auth();
+    // if (!session?.user) {
+    //     throw new Error('Unauthorized');
+    // }
+
+    try {
+        const { text: generatedText } = await generateText({
+            model: nvidia(process.env.NVIDIA_MODEL || 'minimaxai/minimax-m2.1'),
+            system: 'You are an expert resume writer. Write a professional, punchy description (3-4 bullet points) for a role, focusing on achievements and impact. Do not include the company name or title in the bullets.',
+            prompt: `Write a resume description for the position of "${position}" at "${company}".`,
+        });
+
+        return { success: true, text: generatedText };
+    } catch (error) {
+        console.error('Generate description error:', error);
+        return { success: false, error: 'Failed to generate description' };
+    }
+}
