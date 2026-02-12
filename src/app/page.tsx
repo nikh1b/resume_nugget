@@ -1,11 +1,9 @@
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import { FileText, Zap, Target, Sparkles, ArrowRight, Menu } from 'lucide-react';
-import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
-
-import { Logo } from '@/components/Logo';
+import { redirect } from 'next/navigation';
 
 export default function Home() {
+  redirect('/builder/resume/demo');
+
+  // Original Code Below (Unreachable)
   const navLinks = [
     { href: "/dashboard", label: "Dashboard" },
     { href: "#templates", label: "Templates" },

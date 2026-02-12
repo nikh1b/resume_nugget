@@ -6,6 +6,11 @@ import { Resume } from '@/lib/types';
 import { revalidatePath } from 'next/cache';
 
 export async function saveResume(resume: Resume) {
+    // Allow demo mode saving (no-op)
+    if (resume.id === 'demo') {
+        return { success: true };
+    }
+
     const session = await auth();
 
     if (!session?.user?.id) {
