@@ -18,7 +18,7 @@ export async function enhanceDescription(text: string) {
 
     try {
         const { text: enhancedText } = await generateText({
-            model: google('models/gemini-1.5-flash'),
+            model: google('gemini-2.5-flash'),
             system: 'You are an expert resume writer. Improve the following bullet point to be more impactful, using strong action verbs and professional language. Keep it concise.',
             prompt: text,
         });
@@ -39,7 +39,7 @@ export async function analyzeJobMatch(resumeContent: string, jobDescription: str
 
     try {
         const { text: aiResponse } = await generateText({
-            model: google('models/gemini-1.5-flash'),
+            model: google('gemini-2.5-flash'),
             system: `You are a resume and job description analyst. Compare the two and provide a detailed analysis in JSON format.
             IMPORTANT: Return ONLY valid JSON. No markdown code blocks.
             Schema:
@@ -87,7 +87,7 @@ export async function generateExperienceDescription(company: string, position: s
 
     try {
         const { text: generatedText } = await generateText({
-            model: google('models/gemini-1.5-flash'),
+            model: google('gemini-2.5-flash'),
             system: 'You are an expert resume writer. Write a professional, punchy description (3-4 bullet points) for a role, focusing on achievements and impact. Do not include the company name or title in the bullets.',
             prompt: `Write a resume description for the position of "${position}" at "${company}".`,
         });
