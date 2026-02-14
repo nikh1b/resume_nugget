@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button';
-import { FileText, Plus, Edit, Clock, Globe } from 'lucide-react';
+import { Logo } from '@/components/Logo';
+import { FileText, Plus, Edit, Clock, Globe, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { getUserResumes } from '@/app/actions/resume';
 import { auth } from '@/auth';
@@ -22,23 +23,7 @@ export default async function DashboardPage() {
 
     return (
         <div className="min-h-screen bg-[#0a0a0a]">
-            {/* Navbar */}
-            <nav className="flex items-center justify-between px-8 py-5 border-b border-white/5">
-                <Link href="/" className="flex items-center gap-2">
-                    <span className="text-lime-400 font-extrabold text-xl tracking-tight">RESUME</span>
-                    <span className="text-white font-extrabold text-xl tracking-tight">FORGE</span>
-                </Link>
-                <div className="flex items-center gap-4">
-                    <span className="text-sm text-gray-400">{session.user.name || session.user.email}</span>
-                    <Link href="/api/auth/signout">
-                        <Button variant="ghost" size="sm" className="text-gray-500 hover:text-white">
-                            Sign Out
-                        </Button>
-                    </Link>
-                </div>
-            </nav>
-
-            <div className="max-w-5xl mx-auto px-8 py-10">
+            <div className="max-w-5xl mx-auto px-4 sm:px-8 py-8">
                 {/* Header */}
                 <div className="flex flex-col sm:flex-row items-center justify-between mb-10 gap-4 text-center sm:text-left">
                     <div>
@@ -46,7 +31,7 @@ export default async function DashboardPage() {
                         <p className="text-gray-500 text-sm mt-1">Manage your resumes and portfolio.</p>
                     </div>
                     <Link href="/builder/resume/new">
-                        <Button className="bg-lime-500 hover:bg-lime-400 text-black font-bold rounded-full px-6 w-full sm:w-auto">
+                        <Button className="bg-lime-500 hover:bg-lime-400 text-black font-bold rounded-full px-6 w-full sm:w-auto shadow-[0_0_15px_rgba(132,204,22,0.3)] transition-all hover:scale-105 active:scale-95">
                             <Plus className="mr-2 h-4 w-4" /> New Resume
                         </Button>
                     </Link>
@@ -54,28 +39,31 @@ export default async function DashboardPage() {
 
                 {/* Stats */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
-                    <div className="bg-[#111] border border-white/10 rounded-2xl p-6">
+                    <div className="bg-[#111] border border-white/10 rounded-2xl p-6 hover:border-white/20 transition-all group">
                         <div className="flex items-center justify-between">
-                            <span className="text-sm text-gray-400 font-medium">Total Resumes</span>
-                            <FileText className="h-4 w-4 text-gray-500" />
+                            <span className="text-sm text-gray-400 font-medium group-hover:text-white transition-colors">Total Resumes</span>
+                            <FileText className="h-4 w-4 text-gray-600 group-hover:text-lime-500 transition-colors" />
                         </div>
                         <div className="text-3xl font-black text-white mt-2">{resumes.length}</div>
                     </div>
-                    <div className="bg-[#111] border border-white/10 rounded-2xl p-6">
+                    <div className="bg-[#111] border border-white/10 rounded-2xl p-6 hover:border-white/20 transition-all group">
                         <div className="flex items-center justify-between">
-                            <span className="text-sm text-gray-400 font-medium">Templates Used</span>
-                            <FileText className="h-4 w-4 text-gray-500" />
+                            <span className="text-sm text-gray-400 font-medium group-hover:text-white transition-colors">Templates Used</span>
+                            <FileText className="h-4 w-4 text-gray-600 group-hover:text-purple-500 transition-colors" />
                         </div>
                         <div className="text-3xl font-black text-white mt-2">3</div>
                         <span className="text-xs text-gray-600">Ivy • Modern • Creative</span>
                     </div>
-                    <Link href="/builder/portfolio" className="bg-[#111] border border-white/10 rounded-2xl p-6 block hover:border-white/20 transition-all">
-                        <div className="flex items-center justify-between">
-                            <span className="text-sm text-gray-400 font-medium">Portfolio</span>
-                            <Globe className="h-4 w-4 text-lime-400" />
+                    <Link href="/builder/portfolio" className="bg-[#111] border border-white/10 rounded-2xl p-6 block hover:border-lime-500/50 transition-all group relative overflow-hidden">
+                        <div className="absolute inset-0 bg-lime-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                        <div className="flex items-center justify-between relative z-10">
+                            <span className="text-sm text-gray-400 font-medium group-hover:text-white">Portfolio</span>
+                            <Globe className="h-4 w-4 text-lime-600 group-hover:text-lime-400 transition-colors" />
                         </div>
-                        <div className="text-lg font-bold text-lime-400 mt-2">Edit Portfolio →</div>
-                        <span className="text-xs text-gray-600">Customize theme & publish</span>
+                        <div className="text-lg font-bold text-lime-500 group-hover:text-lime-400 mt-2 flex items-center gap-1">
+                            Edit Portfolio <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                        </div>
+                        <span className="text-xs text-gray-600 relative z-10">Customize theme & publish</span>
                     </Link>
                 </div>
 
@@ -94,7 +82,7 @@ export default async function DashboardPage() {
                         </div>
                         <p className="text-gray-500">No resumes yet. Create your first one!</p>
                         <Link href="/builder/resume/new" className="w-full sm:w-auto">
-                            <Button className="bg-red-500 hover:bg-red-400 text-white font-bold rounded-full px-6 w-full">
+                            <Button className="bg-lime-500 hover:bg-lime-400 text-black font-bold rounded-full px-6 w-full">
                                 Create Resume
                             </Button>
                         </Link>
@@ -102,13 +90,13 @@ export default async function DashboardPage() {
                 ) : (
                     <div className="space-y-3">
                         {resumes.map((resume) => (
-                            <div key={resume.id} className="group bg-[#111] border border-white/10 rounded-xl p-5 flex flex-col sm:flex-row items-center justify-between hover:border-white/20 transition-all duration-200 gap-4 sm:gap-0">
+                            <div key={resume.id} className="group bg-[#111] border border-white/10 rounded-xl p-5 flex flex-col sm:flex-row items-center justify-between hover:border-lime-500/30 transition-all duration-200 gap-4 sm:gap-0 hover:shadow-lg hover:shadow-lime-500/5">
                                 <div className="flex items-center gap-4 w-full sm:w-auto">
-                                    <div className="p-2.5 rounded-xl bg-red-500/10 shrink-0">
-                                        <FileText className="h-5 w-5 text-red-400" />
+                                    <div className="p-2.5 rounded-xl bg-lime-500/10 shrink-0">
+                                        <FileText className="h-5 w-5 text-lime-400" />
                                     </div>
                                     <div className="min-w-0">
-                                        <h4 className="font-bold text-white truncate">{resume.title || 'Untitled Resume'}</h4>
+                                        <h4 className="font-bold text-white truncate group-hover:text-lime-400 transition-colors">{resume.title || 'Untitled Resume'}</h4>
                                         <p className="text-xs text-gray-500 flex items-center gap-1 mt-0.5">
                                             <Clock className="h-3 w-3" />
                                             Updated {new Date(resume.updatedAt).toLocaleDateString()}

@@ -35,26 +35,28 @@ export const Sidebar = () => {
     const pathname = usePathname();
 
     return (
-        <aside className="w-64 border-r bg-gray-50/40 hidden md:block">
-            <div className="flex h-16 items-center border-b px-6">
+        <aside className="w-64 border-r border-white/10 bg-[#111] hidden md:block">
+            <div className="flex h-16 items-center border-b border-white/10 px-6">
                 <Link href="/" className="hover:opacity-90 transition-opacity">
                     <div className="scale-75 origin-left">
                         <Logo />
                     </div>
                 </Link>
             </div>
-            <div className="flex-1 overflow-auto py-2">
-                <nav className="grid items-start px-4 text-sm font-medium">
+            <div className="flex-1 overflow-auto py-4">
+                <nav className="grid items-start px-4 text-sm font-medium gap-1">
                     {sidebarItems.map((item, index) => (
                         <Link
                             key={index}
                             href={item.href}
                             className={cn(
-                                "flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50",
-                                pathname === item.href ? "bg-gray-100 text-gray-900 font-semibold" : ""
+                                "flex items-center gap-3 rounded-lg px-3 py-2.5 transition-all",
+                                pathname === item.href
+                                    ? "bg-lime-500/10 text-lime-400 font-semibold"
+                                    : "text-gray-400 hover:text-white hover:bg-white/5"
                             )}
                         >
-                            <item.icon className="h-4 w-4" />
+                            <item.icon className={cn("h-4 w-4", pathname === item.href ? "text-lime-400" : "text-gray-500")} />
                             {item.label}
                         </Link>
                     ))}

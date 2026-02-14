@@ -1,4 +1,11 @@
-export const Logo = () => {
+interface LogoProps {
+    text1?: string;
+    text2?: string;
+    color1?: string;
+    color2?: string;
+}
+
+export const Logo = ({ text1 = "RESUME", text2 = "NUGGET", color1 = "text-white", color2 = "text-yellow-400" }: LogoProps) => {
     return (
         <div className="flex items-center gap-2">
             {/* Nugget Icon */}
@@ -38,10 +45,8 @@ export const Logo = () => {
             </div>
 
             {/* Text */}
-            <div className="flex flex-col leading-none">
-                <span className="text-white font-extrabold text-lg tracking-tight leading-[0.8]">RESUME</span>
-                <span className="text-red-600 font-extrabold text-lg tracking-tight leading-[0.8]">NUGGET</span>
-            </div>
+            <span className={`${color1} font-black text-xl tracking-tighter uppercase`}>{text1}</span>
+            <span className={`${color2} font-black text-xl tracking-tighter uppercase`}>{text2}</span>
         </div>
     );
 };

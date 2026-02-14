@@ -2,6 +2,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useResumeStore } from '@/store/useResumeStore';
+import { Button } from '@/components/ui/button';
+import { Sparkles } from 'lucide-react';
+import { AIRewritePopover } from '@/components/ai/AIRewritePopover';
 
 export const PersonalForm = () => {
     const { resume, updatePersonalInfo } = useResumeStore();
@@ -68,12 +71,30 @@ export const PersonalForm = () => {
                 </div>
             </div>
             <div className="space-y-2">
-                <Label htmlFor="summary">Professional Summary</Label>
+                <div className="flex justify-between items-center">
+                    <Label htmlFor="summary">Professional Summary</Label>
+                    {personalInfo.summary && (
+                        <AIRewritePopover
+                            initialText={personalInfo.summary}
+                            onRewrite={(text) => updatePersonalInfo({ summary: text })}
+                        >
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                className="h-6 px-2 text-xs text-purple-600 hover:text-purple-700 hover:bg-purple-50"
+                            >
+                                <Sparkles className="mr-1 h-3 w-3" />
+                                Improve with AI
+                            </Button>
+                        </AIRewritePopover>
+                    )}
+                </div>
                 <Textarea
                     id="summary"
                     value={personalInfo.summary}
                     onChange={(e) => updatePersonalInfo({ summary: e.target.value })}
                     placeholder="Brief summary of your professional background..."
+                    className="min-h-[120px]"
                 />
             </div>
         </div>

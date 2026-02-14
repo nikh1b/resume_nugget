@@ -5,39 +5,21 @@ import { Textarea } from '@/components/ui/textarea';
 import { useResumeStore } from '@/store/useResumeStore';
 import { Plus, Trash2, Sparkles, Loader2, Wand2 } from 'lucide-react';
 import { useState } from 'react';
-import { enhanceDescription, generateExperienceDescription } from '@/app/actions/ai';
+import { generateExperienceDescription } from '@/app/actions/ai';
+import { AIRewritePopover } from '@/components/ai/AIRewritePopover';
 
 export const ExperienceForm = () => {
     const { resume, addExperience, removeExperience, updateExperience } = useResumeStore();
     const { experience } = resume;
     const [loadingIndices, setLoadingIndices] = useState<number[]>([]);
 
-    const handleEnhance = async (index: number, text: string) => {
-        // Mode: Generate from scratch
-        if (!text) {
-            const exp = experience[index];
-            if (!exp.position) return; // Need at least a position
-
-            setLoadingIndices(prev => [...prev, index]);
-            try {
-                const result = await generateExperienceDescription(exp.company || '', exp.position);
-                if (result.success && result.text) {
-                    updateExperience(index, { description: result.text });
-                }
-            } catch (error) {
-                console.error(error);
-            } finally {
-                setLoadingIndices(prev => prev.filter(i => i !== index));
-            }
-            return;
-        }
-
-        // Mode: Enhance existing text
-        if (text.length < 10) return;
+    const handleGenerateDescription = async (index: number) => {
+        const exp = experience[index];
+        if (!exp.position || !exp.company) return;
 
         setLoadingIndices(prev => [...prev, index]);
         try {
-            const result = await enhanceDescription(text);
+            const result = await generateExperienceDescription(exp.company, exp.position);
             if (result.success && result.text) {
                 updateExperience(index, { description: result.text });
             }
@@ -111,22 +93,39 @@ export const ExperienceForm = () => {
                     <div className="space-y-2 relative">
                         <div className="flex justify-between items-center">
                             <Label>Description</Label>
-                            <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => handleEnhance(index, exp.description)}
-                                disabled={loadingIndices.includes(index) || (!exp.description && !exp.position)}
-                                className={`h-6 px-2 text-xs ${!exp.description ? 'text-blue-600 hover:text-blue-700 hover:bg-blue-50 font-medium' : 'text-purple-600 hover:text-purple-700 hover:bg-purple-50'}`}
-                            >
-                                {loadingIndices.includes(index) ? (
-                                    <Loader2 className="mr-1 h-3 w-3 animate-spin" />
-                                ) : !exp.description ? (
-                                    <Wand2 className="mr-1 h-3 w-3" />
-                                ) : (
-                                    <Sparkles className="mr-1 h-3 w-3" />
+                            <div className="flex gap-2">
+                                {!exp.description && (
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        onClick={() => handleGenerateDescription(index)}
+                                        disabled={loadingIndices.includes(index) || !exp.position || !exp.company}
+                                        className="h-6 px-2 text-xs text-blue-600 hover:text-blue-700 hover:bg-blue-50 font-medium"
+                                    >
+                                        {loadingIndices.includes(index) ? (
+                                            <Loader2 className="mr-1 h-3 w-3 animate-spin" />
+                                        ) : (
+                                            <Wand2 className="mr-1 h-3 w-3" />
+                                        )}
+                                        Generate with AI
+                                    </Button>
                                 )}
-                                {!exp.description ? 'Generate with AI' : 'Enhance with AI'}
-                            </Button>
+                                {exp.description && (
+                                    <AIRewritePopover
+                                        initialText={exp.description}
+                                        onRewrite={(text) => updateExperience(index, { description: text })}
+                                    >
+                                        <Button
+                                            variant="ghost"
+                                            size="sm"
+                                            className="h-6 px-2 text-xs text-purple-600 hover:text-purple-700 hover:bg-purple-50"
+                                        >
+                                            <Sparkles className="mr-1 h-3 w-3" />
+                                            Improve with AI
+                                        </Button>
+                                    </AIRewritePopover>
+                                )}
+                            </div>
                         </div>
                         <Textarea
                             value={exp.description}

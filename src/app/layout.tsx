@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "ResumeNugget — AI Resume Builder",
-  description: "Craft pixel-perfect resumes with AI-powered bullet points, job matching, and PDF export.",
+  title: "Resume Nugget | AI-Powered Resume Builder",
+  description: "Build ATS-optimized resumes with Gemini AI. Free, open-source, and developer-friendly.",
 };
 
 export default function RootLayout({

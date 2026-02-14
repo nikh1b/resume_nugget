@@ -344,7 +344,9 @@ function PortfolioPreview({
 
                 {/* Footer */}
                 <footer className="text-center pt-8 border-t border-white/5">
-                    <p className="text-gray-600 text-xs">Built with ResumeForge</p>
+                    <p className="text-gray-600 text-xs">
+                        Built with <span className="text-white font-bold">RESUME</span><span className="text-yellow-400 font-bold">_NUGGET</span>
+                    </p>
                 </footer>
             </div>
         </div>

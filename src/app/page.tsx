@@ -1,9 +1,12 @@
+'use client';
+
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { FileText, Zap, Target, Sparkles, ArrowRight, Menu } from 'lucide-react';
-import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
-
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Logo } from '@/components/Logo';
+import { motion } from 'framer-motion';
+import { TemplatesCarousel } from '@/components/TemplatesCarousel';
 
 export default function Home() {
   const navLinks = [
@@ -12,24 +15,59 @@ export default function Home() {
     { href: "/about", label: "About" },
   ];
 
+  const fadeInUp = {
+    hidden: { opacity: 0, y: 40 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.8 } }
+  };
+
+  const staggerContainer = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2
+      }
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-[#0a0a0a] flex flex-col">
+    <div className="min-h-screen bg-[#0a0a0a] flex flex-col overflow-x-hidden selection:bg-lime-500/30 selection:text-lime-200">
       {/* Navbar */}
-      <nav className="sticky top-0 z-50 flex items-center justify-between px-6 sm:px-8 py-4 border-b border-white/5 bg-black/50 backdrop-blur-xl">
+      <motion.nav
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        transition={{ duration: 0.6, ease: "circOut" }}
+        className="sticky top-0 z-50 flex items-center justify-between px-6 sm:px-8 py-4 border-b border-white/5 bg-black/50 backdrop-blur-xl"
+      >
         <Link href="/" className="hover:opacity-90 transition-opacity">
           <Logo />
         </Link>
 
         {/* Desktop Links */}
-        <div className="hidden md:flex items-center gap-8 text-sm text-gray-400">
-          {navLinks.map(link => (
-            <Link key={link.href} href={link.href} className="hover:text-white transition-colors">{link.label}</Link>
+        <div className="hidden md:flex items-center gap-8 text-sm text-gray-400 font-medium">
+          {navLinks.map((link, i) => (
+            <motion.div
+              key={link.href}
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 * i + 0.5 }}
+            >
+              <Link href={link.href} className="hover:text-white transition-colors relative group">
+                {link.label}
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-lime-400 transition-all group-hover:w-full"></span>
+              </Link>
+            </motion.div>
           ))}
         </div>
 
-        <div className="flex items-center gap-3">
+        <motion.div
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.8 }}
+          className="flex items-center gap-3"
+        >
           <Link href="/builder/resume/demo" className="hidden sm:block">
-            <Button className="bg-lime-500 hover:bg-lime-400 text-black font-bold px-6 rounded-full text-sm">
+            <Button className="bg-lime-500 hover:bg-lime-400 text-black font-bold px-6 rounded-full text-sm transition-transform hover:scale-105 active:scale-95 shadow-[0_0_20px_rgba(132,204,22,0.3)]">
               Start Building
             </Button>
           </Link>
@@ -37,7 +75,7 @@ export default function Home() {
           {/* Mobile Menu */}
           <Sheet>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="md:hidden text-gray-400">
+              <Button variant="ghost" size="icon" className="md:hidden text-gray-400 hover:text-white hover:bg-white/10">
                 <Menu className="h-6 w-6" />
               </Button>
             </SheetTrigger>
@@ -47,17 +85,23 @@ export default function Home() {
                   <Logo />
                 </div>
                 <div className="flex-1 flex flex-col p-6 gap-6">
-                  {navLinks.map(link => (
-                    <Link
+                  {navLinks.map((link, i) => (
+                    <motion.div
                       key={link.href}
-                      href={link.href}
-                      className="text-lg font-bold text-gray-400 hover:text-white transition-colors"
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: i * 0.1 }}
                     >
-                      {link.label}
-                    </Link>
+                      <Link
+                        href={link.href}
+                        className="text-lg font-bold text-gray-400 hover:text-white transition-colors block"
+                      >
+                        {link.label}
+                      </Link>
+                    </motion.div>
                   ))}
                   <Link href="/builder/resume/demo">
-                    <Button className="w-full bg-lime-500 hover:bg-lime-400 text-black font-bold rounded-full">
+                    <Button className="w-full bg-lime-500 hover:bg-lime-400 text-black font-bold rounded-full mt-4">
                       Start Building
                     </Button>
                   </Link>
@@ -65,211 +109,212 @@ export default function Home() {
               </div>
             </SheetContent>
           </Sheet>
-        </div>
-      </nav>
+        </motion.div>
+      </motion.nav>
 
       {/* Hero */}
-      <div className="flex-1 flex flex-col items-center justify-center px-4 sm:px-8 py-20 text-center">
-        <h1 className="text-5xl sm:text-6xl md:text-8xl font-black tracking-tighter text-white leading-[0.9] mb-6">
-          BUILD KILLER
-          <br />
-          <span className="text-red-500">RESUMES.</span>
-        </h1>
-        <p className="text-gray-400 text-lg md:text-xl max-w-xl mx-auto mt-4 mb-2">
-          The AI-powered resume builder that helps you craft ATS-optimized resumes in minutes.
-        </p>
-        <p className="text-lime-400 font-semibold text-sm mb-8">
-          AI-enhanced. ATS-optimized. Recruiter-approved.
-        </p>
+      <div className="flex-1 flex flex-col items-center justify-center px-4 sm:px-8 py-24 md:py-32 text-center relative overflow-hidden">
+        {/* Hero Background Effects */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1.5, ease: "easeOut" }}
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-lime-500/5 blur-[120px] rounded-full pointer-events-none"
+        />
 
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Link href="/builder/resume/demo">
-            <Button className="bg-red-500 hover:bg-red-400 text-white font-bold px-8 h-12 text-base rounded-full">
-              Start Building
-            </Button>
-          </Link>
-          <Link href="/dashboard">
-            <Button variant="outline" className="border-gray-700 text-gray-300 hover:bg-white/5 hover:text-white font-medium px-8 h-12 text-base rounded-full">
-              Go to Dashboard
-            </Button>
-          </Link>
-        </div>
+        <motion.div
+          variants={staggerContainer}
+          initial="hidden"
+          animate="visible"
+          className="relative z-10 max-w-5xl mx-auto"
+        >
+          <motion.h1
+            variants={fadeInUp}
+            className="text-6xl sm:text-7xl md:text-9xl font-black tracking-tighter text-white leading-[0.9] mb-8 drop-shadow-2xl"
+          >
+            BUILD KILLER
+            <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-orange-600">RESUMES.</span>
+          </motion.h1>
+
+          <motion.p
+            variants={fadeInUp}
+            className="text-gray-400 text-lg md:text-2xl max-w-2xl mx-auto mt-4 mb-2 leading-relaxed font-light"
+          >
+            The AI-powered resume builder that helps you craft <span className="text-white font-medium">ATS-optimized</span> resumes in minutes.
+          </motion.p>
+
+          <motion.p
+            variants={fadeInUp}
+            className="text-lime-400 font-semibold text-sm tracking-widest uppercase mb-10"
+          >
+            AI-enhanced. ATS-optimized. Recruiter-approved.
+          </motion.p>
+
+          <motion.div
+            variants={fadeInUp}
+            className="flex flex-col sm:flex-row gap-5 justify-center items-center"
+          >
+            <Link href="/builder/resume/demo">
+              <Button className="bg-white text-black hover:bg-gray-200 font-bold px-10 h-14 text-lg rounded-full shadow-[0_0_30px_rgba(255,255,255,0.1)] transition-transform hover:scale-105 active:scale-95">
+                Start Building Now
+              </Button>
+            </Link>
+            <Link href="/dashboard">
+              <Button variant="outline" className="border-white/10 text-gray-300 hover:bg-white/5 hover:text-white font-medium px-10 h-14 text-lg rounded-full backdrop-blur-sm transition-colors">
+                Go to Dashboard
+              </Button>
+            </Link>
+          </motion.div>
+        </motion.div>
       </div>
 
       {/* Feature Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 px-8 pb-16 max-w-6xl mx-auto w-full">
-        {/* ... existing feature cards ... */}
-        <Link href="/builder/resume/demo" className="group bg-[#111] border border-white/10 rounded-2xl p-6 hover:border-white/20 transition-all duration-300 cursor-pointer block">
-          <div className="flex flex-col items-center text-center gap-3">
-            <div className="p-3 rounded-full bg-red-500/10">
-              <FileText className="h-6 w-6 text-red-400" />
-            </div>
-            <span className="text-white font-semibold">Resume Builder</span>
-            <span className="text-gray-500 text-xs">Drag-and-drop editor with live preview</span>
-          </div>
-        </Link>
-        <Link href="/builder/resume/demo" className="group bg-[#111] border border-white/10 rounded-2xl p-6 hover:border-white/20 transition-all duration-300 cursor-pointer block">
-          <div className="flex flex-col items-center text-center gap-3">
-            <div className="p-3 rounded-full bg-amber-500/10">
-              <Sparkles className="h-6 w-6 text-amber-400" />
-            </div>
-            <span className="text-white font-semibold">AI Enhancer</span>
-            <span className="text-gray-500 text-xs">Rewrite bullet points with powerful AI</span>
-          </div>
-        </Link>
-        <Link href="/builder/resume/demo?open=job-match" className="group bg-[#111] border border-white/10 rounded-2xl p-6 hover:border-white/20 transition-all duration-300 cursor-pointer block">
-          <div className="flex flex-col items-center text-center gap-3">
-            <div className="p-3 rounded-full bg-blue-500/10">
-              <Target className="h-6 w-6 text-blue-400" />
-            </div>
-            <span className="text-white font-semibold">Job Matching</span>
-            <span className="text-gray-500 text-xs">Match score + missing keyword analysis</span>
-          </div>
-        </Link>
-        <Link href="/builder/resume/demo" className="group bg-[#111] border border-white/10 rounded-2xl p-6 hover:border-white/20 transition-all duration-300 cursor-pointer block">
-          <div className="flex flex-col items-center text-center gap-3">
-            <div className="p-3 rounded-full bg-purple-500/10">
-              <Zap className="h-6 w-6 text-purple-400" />
-            </div>
-            <span className="text-white font-semibold">PDF Export</span>
-            <span className="text-gray-500 text-xs">Three premium templates, instant download</span>
-          </div>
-        </Link>
-      </div>
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
+        variants={staggerContainer}
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 px-8 pb-32 max-w-7xl mx-auto w-full relative z-10"
+      >
+        {[
+          { icon: FileText, color: "text-red-400", bg: "bg-red-500/10", title: "Resume Builder", desc: "Drag-and-drop editor with live preview", link: "/builder/resume/demo" },
+          { icon: Sparkles, color: "text-amber-400", bg: "bg-amber-500/10", title: "AI Enhancer", desc: "Rewrite bullet points with powerful AI", link: "/builder/resume/demo" },
+          { icon: Target, color: "text-blue-400", bg: "bg-blue-500/10", title: "Job Matching", desc: "Match score + missing keyword analysis", link: "/builder/resume/demo?open=job-match" },
+          { icon: Zap, color: "text-purple-400", bg: "bg-purple-500/10", title: "PDF Export", desc: "Premium templates, instant download", link: "/builder/resume/demo" }
+        ].map((feature, i) => (
+          <motion.div variants={fadeInUp} key={i}>
+            <Link href={feature.link} className="group bg-[#111]/50 backdrop-blur-md border border-white/5 rounded-3xl p-8 hover:border-white/20 transition-all duration-500 cursor-pointer block hover:bg-[#111] hover:-translate-y-2 relative overflow-hidden h-full">
+              {/* Hover Gradient */}
+              <div className={`absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-500 bg-gradient-to-br from-transparent to-white pointer-events-none`}></div>
+
+              <div className="flex flex-col items-center text-center gap-4 relative z-10">
+                <div className={`p-4 rounded-2xl ${feature.bg} transition-transform group-hover:scale-110 duration-500`}>
+                  <feature.icon className={`h-8 w-8 ${feature.color}`} />
+                </div>
+                <span className="text-white font-bold text-lg">{feature.title}</span>
+                <span className="text-gray-500 text-sm leading-relaxed">{feature.desc}</span>
+              </div>
+            </Link>
+          </motion.div>
+        ))}
+      </motion.div>
 
       {/* Templates Showcase Section */}
-      <section id="templates" className="py-20 bg-black/50 border-t border-white/5 scroll-mt-32">
-        <div className="max-w-6xl mx-auto px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-5xl font-black text-white mb-4">PREMIUM <span className="text-lime-400">TEMPLATES</span></h2>
-            <p className="text-gray-400 max-w-2xl mx-auto">Choose from our selection of ATS-optimized templates designed to get you hired.</p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Ivy */}
-            <div className="group bg-[#111] border border-white/10 rounded-xl overflow-hidden hover:border-lime-500/50 transition-all">
-              <div className="h-64 bg-white/5 flex items-center justify-center p-8">
-                {/* Placeholder for template preview */}
-                <div className="w-3/4 h-full bg-white shadow-xl flex flex-col p-2 gap-2">
-                  <div className="h-4 w-1/3 bg-gray-300 rounded"></div>
-                  <div className="h-2 w-full bg-gray-200 rounded"></div>
-                  <div className="h-2 w-full bg-gray-200 rounded"></div>
-                  <div className="h-2 w-2/3 bg-gray-200 rounded"></div>
-                </div>
-              </div>
-              <div className="p-6">
-                <h3 className="text-xl font-bold text-white mb-2">Ivy League</h3>
-                <p className="text-gray-400 text-sm mb-4">Clean, serif-based design. Perfect for academic and corporate roles.</p>
-                <Link href="/builder/resume/demo?template=ivy">
-                  <Button size="sm" variant="outline" className="w-full border-white/10 text-white hover:bg-lime-500 hover:text-black">Use Template</Button>
-                </Link>
-              </div>
-            </div>
-
-            {/* Modern */}
-            <div className="group bg-[#111] border border-white/10 rounded-xl overflow-hidden hover:border-purple-500/50 transition-all">
-              <div className="h-64 bg-white/5 flex items-center justify-center p-8">
-                <div className="w-3/4 h-full bg-white shadow-xl flex flex-row">
-                  <div className="w-1/3 bg-gray-900 h-full p-2">
-                    <div className="h-8 w-8 bg-gray-700 rounded-full mb-2"></div>
-                    <div className="h-2 w-full bg-gray-700 rounded mb-1"></div>
-                  </div>
-                  <div className="w-2/3 p-2 flex flex-col gap-2">
-                    <div className="h-4 w-1/2 bg-gray-300 rounded"></div>
-                    <div className="h-2 w-full bg-gray-200 rounded"></div>
-                  </div>
-                </div>
-              </div>
-              <div className="p-6">
-                <h3 className="text-xl font-bold text-white mb-2">Modern Tech</h3>
-                <p className="text-gray-400 text-sm mb-4">Two-column layout with a dark sidebar. Ideal for developers and designers.</p>
-                <Link href="/builder/resume/demo?template=modern">
-                  <Button size="sm" variant="outline" className="w-full border-white/10 text-white hover:bg-purple-500 hover:text-white">Use Template</Button>
-                </Link>
-              </div>
-            </div>
-
-            {/* Creative */}
-            <div className="group bg-[#111] border border-white/10 rounded-xl overflow-hidden hover:border-red-500/50 transition-all">
-              <div className="h-64 bg-white/5 flex items-center justify-center p-8">
-                <div className="w-3/4 h-full bg-white shadow-xl flex flex-col">
-                  <div className="h-16 w-full bg-purple-600 mb-2"></div>
-                  <div className="p-2 flex flex-col gap-2">
-                    <div className="h-2 w-full bg-gray-200 rounded"></div>
-                    <div className="h-2 w-full bg-gray-200 rounded"></div>
-                  </div>
-                </div>
-              </div>
-              <div className="p-6">
-                <h3 className="text-xl font-bold text-white mb-2">Creative Studio</h3>
-                <p className="text-gray-400 text-sm mb-4">Bold headers and vibrant accents. Stand out for creative positions.</p>
-                <Link href="/builder/resume/demo?template=creative">
-                  <Button size="sm" variant="outline" className="w-full border-white/10 text-white hover:bg-red-500 hover:text-white">Use Template</Button>
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <TemplatesCarousel />
 
       {/* About Section */}
-      <section id="about" className="py-24 border-t border-white/5 scroll-mt-32">
-        <div className="max-w-4xl mx-auto px-8 text-center">
-          <h2 className="text-3xl md:text-5xl font-black text-white mb-6">WHY <span className="text-red-500">RESUME NUGGET?</span></h2>
-          <p className="text-gray-400 text-lg leading-relaxed mb-8">
-            I built Resume Nugget because most resume builders are frustrating. They lock features behind paywalls, force you into generic templates, or hold your data hostage.
-            <br /><br />
-            Resume Nugget is different. It uses <strong>Google Gemini AI</strong> (Flash 2.5) to rewrite your descriptions, analyzes your resume against job descriptions to find missing keywords, and gives you full control over your data with direct PDF exports.
-          </p>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 py-8 border-t border-white/5 border-b border-white/5 mb-16">
-            <div>
-              <div className="text-3xl font-black text-white">100%</div>
-              <div className="text-xs text-gray-500 uppercase tracking-widest mt-1">Free</div>
-            </div>
-            <div>
-              <div className="text-3xl font-black text-white">8+</div>
-              <div className="text-xs text-gray-500 uppercase tracking-widest mt-1">Templates</div>
-            </div>
-            <div>
-              <div className="text-3xl font-black text-white">AI</div>
-              <div className="text-xs text-gray-500 uppercase tracking-widest mt-1">Powered</div>
-            </div>
-            <div>
-              <div className="text-3xl font-black text-white">ATS</div>
-              <div className="text-xs text-gray-500 uppercase tracking-widest mt-1">Friendly</div>
-            </div>
-          </div>
+      <section id="about" className="py-32 border-t border-white/5 scroll-mt-32 relative overflow-hidden">
+        {/* Background Gradients */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-lime-500/5 blur-[120px] rounded-full pointer-events-none"></div>
 
-          {/* Meet The Developer */}
-          <div className="text-left bg-[#111] p-8 rounded-2xl border border-white/10">
-            <h3 className="text-2xl font-bold text-white mb-4">Meet the Developer</h3>
-            <div className="flex flex-col md:flex-row gap-6 items-start">
-              <div className="flex-1">
-                <p className="text-gray-400 leading-relaxed mb-4">
-                  Hi, I'm <strong>Nikhil</strong>. I'm a Full Stack Developer and student passionate about building tools that actually help people.
-                </p>
-                <p className="text-gray-400 leading-relaxed">
-                  I created this project to solve a personal pain point: building a great resume shouldn't be hard or expensive.
-                  When I'm not coding, I'm exploring new AI technologies, contributing to open source, or working on my next big idea.
-                </p>
-              </div>
-              <div className="shrink-0 bg-white/5 p-4 rounded-xl border border-white/5">
-                <p className="text-sm text-gray-500 font-mono mb-2">Let's Connect:</p>
-                <div className="flex flex-col gap-2">
-                  <a href="https://github.com/nikh1b" target="_blank" className="text-lime-400 hover:underline text-sm font-medium">github.com/nikh1b</a>
-                  <span className="text-gray-400 text-sm">Full Stack Developer</span>
-                  <span className="text-gray-400 text-sm">Open Source Enthusiast</span>
+        <div className="max-w-7xl mx-auto px-8 relative z-10">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="text-center mb-20"
+          >
+            <h2 className="text-4xl md:text-6xl font-black text-white mb-6 tracking-tight">
+              CRAFTED WITH <span className="text-transparent bg-clip-text bg-gradient-to-r from-lime-400 to-green-600">CODE & SOUL.</span>
+            </h2>
+            <p className="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed">
+              Resume Nugget wasn't built by a faceless corporation. It was forged to break the cycle of expensive, gatekept career tools.
+            </p>
+          </motion.div>
+
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={staggerContainer}
+            className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-24"
+          >
+            {[
+              { icon: Zap, color: "text-lime-400", bg: "bg-lime-500/10", border: "hover:border-lime-500/30", bgHover: "group-hover:bg-lime-500/20", title: "The Anti-Gatekeeper", desc: "Most builders hold your PDF hostage behind a paywall. We don't. Your data, your file, your career. 100% Free." },
+              { icon: Sparkles, color: "text-purple-400", bg: "bg-purple-500/10", border: "hover:border-purple-500/30", bgHover: "group-hover:bg-purple-500/20", title: "Powered by Gemini", desc: "We leverage Google's Gemini 2.5 Flash to analyze your intent, rewrite your impact, and match keywords with recruiter-level precision." },
+              { icon: Target, color: "text-blue-400", bg: "bg-blue-500/10", border: "hover:border-blue-500/30", bgHover: "group-hover:bg-blue-500/20", title: "Privacy at Core", desc: "No tracking pixels. No selling data to recruiters. Your resume data stays local and secure. Built for developers, by a developer." }
+            ].map((item, i) => (
+              <motion.div variants={fadeInUp} key={i}>
+                <div className={`bg-[#111] border border-white/10 p-8 rounded-3xl ${item.border} transition-all group h-full`}>
+                  <div className={`h-12 w-12 ${item.bg} rounded-2xl flex items-center justify-center mb-6 ${item.bgHover} transition-colors`}>
+                    <item.icon className={`h-6 w-6 ${item.color}`} />
+                  </div>
+                  <h3 className="text-2xl font-bold text-white mb-3">{item.title}</h3>
+                  <p className="text-gray-400 leading-relaxed text-sm">
+                    {item.desc}
+                  </p>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
+
+          {/* Developer Spotlight */}
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="max-w-4xl mx-auto"
+          >
+            <div className="bg-gradient-to-br from-[#111] to-[#0d0d0d] border border-white/10 rounded-[2rem] p-8 md:p-12 relative overflow-hidden group hover:border-lime-500/20 transition-all duration-700">
+              {/* Decorative elements */}
+              <div className="absolute top-0 right-0 w-64 h-64 bg-lime-500/5 blur-[80px] rounded-full -translate-y-1/2 translate-x-1/2 group-hover:bg-lime-500/10 transition-colors duration-700"></div>
+
+              <div className="flex flex-col md:flex-row items-center gap-10 relative z-10">
+                <div className="shrink-0 relative">
+                  <div className="w-32 h-32 md:w-40 md:h-40 rounded-full bg-gray-800 border-4 border-[#1a1a1a] overflow-hidden shadow-2xl relative">
+                    {/* Avatar Placeholder or Initials */}
+                    <div className="w-full h-full flex items-center justify-center bg-[#1a1a1a] text-white font-black text-4xl">
+                      N
+                    </div>
+                  </div>
+                  <motion.div
+                    whileHover={{ scale: 1.1 }}
+                    className="absolute -bottom-2 -right-2 bg-lime-500 text-black text-xs font-bold px-3 py-1 rounded-full border-4 border-[#111]"
+                  >
+                    CREATOR
+                  </motion.div>
+                </div>
+
+                <div className="text-center md:text-left flex-1">
+                  <h3 className="text-3xl font-black text-white mb-2">Designed by Nikhil</h3>
+                  <p className="text-lime-400 font-medium mb-6 tracking-wide uppercase text-sm">Full Stack Developer & Open Source Enthusiast</p>
+
+                  <p className="text-gray-300 text-lg mb-8 leading-relaxed">
+                    "I believe software should empower, not exploit. I poured hundreds of hours of love into Resume Nugget to give you the unfair advantage in your job search."
+                  </p>
+
+                  <div className="flex flex-col sm:flex-row items-center gap-4 justify-center md:justify-start">
+                    <a
+                      href="https://my-resume-nikhil.vercel.app/"
+                      target="_blank"
+                      className="group relative inline-flex items-center justify-center px-8 py-3 font-bold text-white transition-all duration-200 bg-lime-600 font-lg rounded-full hover:bg-lime-500 focus:outline-none ring-offset-2 focus:ring-2 ring-lime-400"
+                    >
+                      <span className="mr-2">View My Portfolio</span>
+                      <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                    </a>
+
+                    <a
+                      href="https://github.com/nikh1b"
+                      target="_blank"
+                      className="inline-flex items-center justify-center px-8 py-3 font-bold text-gray-300 transition-all duration-200 bg-white/5 border border-white/10 rounded-full hover:bg-white/10 focus:outline-none"
+                    >
+                      GitHub Profile
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="py-8 border-t border-white/5 text-center">
+      <footer className="py-8 border-t border-white/5 text-center bg-[#050505] relative z-20">
         <p className="text-gray-600 text-sm">© {new Date().getFullYear()} Resume Nugget. Built by Nikhil.</p>
       </footer>
-    </div>
+    </div >
   );
 }

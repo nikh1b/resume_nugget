@@ -23,6 +23,11 @@ const PdfDownloadButton = dynamic(
 import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetDescription, SheetHeader } from "@/components/ui/sheet"
 
 import { Logo } from '@/components/Logo';
+import { ResumeScore } from '@/components/ai/ResumeScore';
+import { QuestLog } from '@/components/ai/QuestLog';
+import { InterviewPrepModal } from '@/components/ai/InterviewPrepModal';
+import { ATSSimulator } from '@/components/ai/ATSSimulator';
+import { IntentAnalyzer } from '@/components/ai/IntentAnalyzer';
 
 interface ResumeEditorProps {
     initialData: Resume;
@@ -95,7 +100,7 @@ export default function ResumeEditor({ initialData, id, initialTemplate }: Resum
             <div className="h-14 border-b border-white/10 bg-[#111] flex items-center justify-between px-4 sticky top-0 z-50">
                 <div className="flex items-center gap-3">
                     <div className="flex items-center scale-75 origin-left">
-                        <Logo />
+                        <Logo text1="NUGGET" text2="FACTORY" color1="text-yellow-400" color2="text-white" />
                     </div>
 
                     <div className="h-4 w-[1px] bg-white/10 mx-1 hidden sm:block"></div>
@@ -125,6 +130,9 @@ export default function ResumeEditor({ initialData, id, initialTemplate }: Resum
                 </div>
 
                 <div className="flex items-center gap-2">
+                    <InterviewPrepModal />
+                    <ATSSimulator />
+                    <IntentAnalyzer />
                     <Sheet open={isJobMatchOpen} onOpenChange={setIsJobMatchOpen}>
                         <SheetTrigger asChild>
                             <Button variant="ghost" size="icon" className="text-gray-400 hover:text-white sm:hidden">
@@ -200,10 +208,13 @@ export default function ResumeEditor({ initialData, id, initialTemplate }: Resum
             <div className="flex flex-1 overflow-hidden relative">
                 {/* Editor Panel */}
                 <div className={`
-                    absolute inset-0 sm:static sm:w-1/2 border-r border-white/10 bg-[#0d0d0d] p-4 sm:p-6 overflow-hidden transition-opacity duration-200
+                    absolute inset-0 sm:static sm:w-1/2 border-r border-white/10 bg-[#0d0d0d] p-4 sm:p-6 overflow-hidden transition-opacity duration-200 flex flex-col
                     ${activeTab === 'editor' ? 'opacity-100 z-10' : 'opacity-0 -z-10 sm:opacity-100 sm:z-0'}
                 `}>
-                    <ResumeForm />
+
+                    <div className="flex-1 overflow-y-auto pr-2">
+                        <ResumeForm />
+                    </div>
                 </div>
 
                 {/* Preview Panel */}
@@ -216,7 +227,14 @@ export default function ResumeEditor({ initialData, id, initialTemplate }: Resum
                     </div>
                 </div>
             </div>
+
+            {/* AI Floating Widgets */}
+            <div className="fixed bottom-6 right-6 flex flex-col gap-4 z-50">
+                <div className="w-80">
+                    <QuestLog />
+                </div>
+                <ResumeScore />
+            </div>
         </div>
     );
 }
-

@@ -3,30 +3,13 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useResumeStore } from '@/store/useResumeStore';
-import { Plus, Trash2, Sparkles, Loader2 } from 'lucide-react';
-import { useState } from 'react';
-import { enhanceDescription } from '@/app/actions/ai';
+import { Plus, Trash2, Sparkles } from 'lucide-react';
+import { TechStackExtractor } from '@/components/ai/TechStackExtractor';
+import { AIRewritePopover } from '@/components/ai/AIRewritePopover';
 
 export const ProjectsForm = () => {
     const { resume, addProject, removeProject, updateProject } = useResumeStore();
     const { projects } = resume;
-    const [loadingIndices, setLoadingIndices] = useState<number[]>([]);
-
-    const handleEnhance = async (index: number, text: string) => {
-        if (!text || text.length < 10) return;
-
-        setLoadingIndices(prev => [...prev, index]);
-        try {
-            const result = await enhanceDescription(text);
-            if (result.success && result.text) {
-                updateProject(index, { description: result.text });
-            }
-        } catch (error) {
-            console.error(error);
-        } finally {
-            setLoadingIndices(prev => prev.filter(i => i !== index));
-        }
-    };
 
     return (
         <div className="space-y-4">
@@ -52,10 +35,10 @@ export const ProjectsForm = () => {
                         </div>
                         <div className="space-y-2">
                             <Label>Link</Label>
-                            <Input
+                            <TechStackExtractor
                                 value={project.link || ''}
-                                onChange={(e) => updateProject(index, { link: e.target.value })}
-                                placeholder="github.com/my-app"
+                                onChange={(val) => updateProject(index, { link: val })}
+                                onExtract={(tags) => updateProject(index, { technologies: tags })}
                             />
                         </div>
                     </div>
@@ -70,20 +53,19 @@ export const ProjectsForm = () => {
                     <div className="space-y-2 relative">
                         <div className="flex justify-between items-center">
                             <Label>Description</Label>
-                            <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => handleEnhance(index, project.description)}
-                                disabled={loadingIndices.includes(index) || !project.description}
-                                className="h-6 px-2 text-xs text-purple-600 hover:text-purple-700 hover:bg-purple-50"
+                            <AIRewritePopover
+                                onRewrite={(text) => updateProject(index, { description: text })}
+                                initialText={project.description}
                             >
-                                {loadingIndices.includes(index) ? (
-                                    <Loader2 className="mr-1 h-3 w-3 animate-spin" />
-                                ) : (
+                                <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    className="h-6 px-2 text-xs text-purple-600 hover:text-purple-700 hover:bg-purple-50"
+                                >
                                     <Sparkles className="mr-1 h-3 w-3" />
-                                )}
-                                Enhance with AI
-                            </Button>
+                                    Enhance with AI
+                                </Button>
+                            </AIRewritePopover>
                         </div>
                         <Textarea
                             value={project.description}
