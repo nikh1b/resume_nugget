@@ -3,10 +3,16 @@
 import { auth } from '@/auth';
 import { generateText, generateObject } from 'ai';
 import { createGoogleGenerativeAI } from '@ai-sdk/google';
+import { createOpenAI } from '@ai-sdk/openai';
 import { z } from 'zod';
 
 const google = createGoogleGenerativeAI({
     apiKey: process.env.GOOGLE_GENERATIVE_AI_API_KEY,
+});
+
+const huggingface = createOpenAI({
+    baseURL: "https://router.huggingface.co/v1",
+    apiKey: process.env.HF_TOKEN,
 });
 
 export async function generateRewrite(text: string) {
@@ -30,7 +36,7 @@ Concise: Deliver the core message in the fewest words possible without losing im
 
     try {
         const { object } = await generateObject({
-            model: google('gemini-2.5-flash'),
+            model: google('gemini-3-flash-preview'),
             system: systemPrompt,
             schema: z.object({
                 action_oriented: z.string(),
@@ -42,15 +48,135 @@ Concise: Deliver the core message in the fewest words possible without losing im
 
         return { success: true, variations: object };
     } catch (error) {
-        console.error('Rewrite error:', error);
         return { success: false, error: 'Failed to rewrite text' };
+    }
+}
+
+export async function chatWithGoldenBot(
+    userMessage: string,
+    context: { currentPage: string; activeField: string | null }
+) {
+    console.log("--- ChatWithGoldenBot Started ---");
+    const hfToken = process.env.HF_TOKEN;
+    const hasHfToken = hfToken && hfToken.length > 10;
+    console.log("HF_TOKEN valid:", hasHfToken);
+
+    const systemPrompt = `
+System: You are 'GoldenBot', the proactive and highly intelligent AI concierge for the RESUME_NUGGET resume and portfolio builder.
+Your goal is to guide users through the platform, offer strategic resume advice, and actively help them use the site's tools. You are friendly, sharp, and concise.
+
+Your Capabilities (The Action Engine):
+You are not just a chatbot; you are integrated into the website's React frontend. You can trigger website actions by outputting specific commands.
+
+Available Actions:
+NAVIGATE: Use this to send the user to a different page.
+VALID TARGETS ONLY:
+- /builder/resume/demo (Use this for "Templates", "Builder", "Editor", "ATS Check")
+- /dashboard (User dashboard)
+- / (Home page)
+TRIGGER_FEATURE: Use this to open modals or start tools (e.g., open_rewrite_modal, start_quest_log, extract_tech_stack).
+NONE: Use this if you are just answering a question and no website action is needed.
+
+Context Awareness:
+Current Page: ${context.currentPage}
+Active Field: ${context.activeField || 'None'}
+
+Output Format:
+You must respond ONLY with a raw JSON object. Do not use Markdown formatting (no \`\`\`json). Do not include any explanations or preambles.
+Structure:
+{
+  "goldenbot_message": "Your response here",
+  "action_type": "NAVIGATE" | "TRIGGER_FEATURE" | "NONE",
+  "action_target": "target_here"
+}`;
+
+    let textResponse = "";
+    let errorLog = [];
+
+    // 1. Try HuggingFace (Only if token exists)
+    if (hasHfToken) {
+        try {
+            console.log("Attempting HuggingFace Router...");
+            const { text } = await generateText({
+                model: huggingface('moonshotai/Kimi-K2-Instruct-0905:groq'),
+                system: systemPrompt,
+                prompt: `User Input: "${userMessage}"`,
+            });
+            textResponse = text;
+            console.log("HF Success.");
+        } catch (hfError: any) {
+            console.warn("HuggingFace Failed:", hfError.message);
+            errorLog.push(`HF: ${hfError.message}`);
+        }
+    } else {
+        console.log("Skipping HF (No token).");
+    }
+
+    // 2. Google Fallback Chain (if HF failed or skipped)
+    if (!textResponse) {
+        // List of models to try in order. 
+        // We use 2.0-flash (fastest), then lite (cheaper/different quota), then exp (backup)
+        const googleModels = [
+            'gemini-3-flash-preview',
+            'gemini-2.0-flash',
+            'gemini-exp-1206'
+        ];
+
+        for (const modelName of googleModels) {
+            try {
+                console.log(`Attempting Google Model: ${modelName}...`);
+                const { text } = await generateText({
+                    model: google(modelName),
+                    system: systemPrompt,
+                    prompt: `User Input: "${userMessage}"`,
+                });
+                textResponse = text;
+                console.log(`Gemini (${modelName}) Success.`);
+                break; // Stop loop on success
+            } catch (gError: any) {
+                console.warn(`Gemini (${modelName}) Failed:`, gError.message);
+                errorLog.push(`${modelName}: ${gError.message}`);
+                // Continue to next model
+            }
+        }
+    }
+
+    // If still no response, return failure
+    if (!textResponse) {
+        return {
+            success: false,
+            data: {
+                goldenbot_message: `I'm out of brainpower right now! (Errors: ${errorLog.join(' | ')})`,
+                action_type: "NONE",
+                action_target: ""
+            }
+        };
+    }
+
+    // 3. Robust JSON Extraction & Parsing
+    try {
+        console.log("Raw Response:", textResponse);
+        const jsonMatch = textResponse.match(/\{[\s\S]*\}/);
+        const cleanedText = jsonMatch ? jsonMatch[0] : textResponse;
+        const data = JSON.parse(cleanedText);
+        return { success: true, data };
+    } catch (jsonError) {
+        console.error("JSON Parse Error:", jsonError);
+        return {
+            success: false,
+            data: {
+                goldenbot_message: "I'm having a bit of a brain freeze processing the response. Try again?",
+                action_type: "NONE",
+                action_target: ""
+            }
+        };
     }
 }
 
 export async function analyzeResume(resumeContent: string) {
     try {
         const { object } = await generateObject({
-            model: google('gemini-2.5-flash'),
+            model: google('gemini-3-flash-preview'),
             system: `You are a strict resume critic. Analyze the resume and provide a score out of 100 based on impact, brevity, and formatting (implied).
             Provide specific, actionable suggestions to improve the score.
             Return a structured JSON object.`,
@@ -72,7 +198,7 @@ export async function analyzeResume(resumeContent: string) {
 export async function analyzeJobMatch(resumeContent: string, jobDescription: string) {
     try {
         const { object } = await generateObject({
-            model: google('gemini-2.5-flash'),
+            model: google('gemini-3-flash-preview'),
             system: `You are a resume and job description analyst. Compare the two and provide a detailed analysis.
             Identify keywords present in the JD but missing from the resume.
             Identify keywords that match.
@@ -103,7 +229,7 @@ export async function analyzeJobMatch(resumeContent: string, jobDescription: str
 export async function generateExperienceDescription(company: string, position: string) {
     try {
         const { text: generatedText } = await generateText({
-            model: google('gemini-2.5-flash'),
+            model: google('gemini-3-flash-preview'),
             system: 'You are an expert resume writer. Write a professional, punchy description (3-4 bullet points) for a role, focusing on achievements and impact. Do not include the company name or title in the bullets.',
             prompt: `Write a resume description for the position of "${position}" at "${company}".`,
         });
@@ -118,7 +244,7 @@ export async function generateExperienceDescription(company: string, position: s
 export async function generateInterviewQuestions(resumeContent: string) {
     try {
         const { object } = await generateObject({
-            model: google('gemini-2.5-flash'),
+            model: google('gemini-3-flash-preview'),
             system: `You are a tough, expert technical interviewer. Your goal is to find the weak spots, exaggerations, or complex claims in a candidate's resume and generate 3-5 challenging interview questions to test them.
             
             For each question:
@@ -145,7 +271,7 @@ export async function generateInterviewQuestions(resumeContent: string) {
 export async function generateQuests(resumeContent: string) {
     try {
         const { object } = await generateObject({
-            model: google('gemini-2.5-flash'),
+            model: google('gemini-3-flash-preview'),
             system: `You are a "Career Dungeon Master". Gamify the resume building process. Analyze the resume for missing sections, weak descriptions, or lack of metrics. 
             Generate 3-5 "Quests" to help the user level up their resume.
             
@@ -196,7 +322,7 @@ export async function extractTechStack(url: string) {
         }
 
         const { object } = await generateObject({
-            model: google('gemini-2.5-flash'),
+            model: google('gemini-3-flash-preview'),
             system: `You are a tech stack expert. specific technologies, languages, and frameworks used in a project based on its description or URL.
             Return a list of specific technologies (e.g., "React", "Next.js", "TypeScript", "Tailwind CSS", "PostgreSQL").
             Do not include generic terms like "Frontend" or "Backend".`,
@@ -220,7 +346,7 @@ export async function extractTechStack(url: string) {
 export async function simulateATS(resumeContent: string) {
     try {
         const { object } = await generateObject({
-            model: google('gemini-2.5-flash'),
+            model: google('gemini-3-flash-preview'),
             system: `You are a merciless, literal-minded Applicant Tracking System (ATS) parsing bot. Your primary function is to scan resume text, find formatting anomalies, flag meaningless corporate jargon, and ruthlessly auto-reject candidates who do not optimize their text for machines.
             
             Your Directives:

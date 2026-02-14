@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@ai-sdk/google": "^3.0.24",
-    "@ai-sdk/openai": "^3.0.26",
+    "@ai-sdk/openai": "^3.0.29",
     "@auth/prisma-adapter": "^2.11.1",
     "@prisma/client": "^5.22.0",
     "@radix-ui/react-dialog": "^1.1.15",

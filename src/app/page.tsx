@@ -7,6 +7,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Logo } from '@/components/Logo';
 import { motion } from 'framer-motion';
 import { TemplatesCarousel } from '@/components/TemplatesCarousel';
+import { DemoReel } from '@/components/home/DemoReel';
 
 export default function Home() {
   const navLinks = [
@@ -169,6 +170,8 @@ export default function Home() {
         </motion.div>
       </div>
 
+
+
       {/* Feature Cards */}
       <motion.div
         initial="hidden"
@@ -202,6 +205,11 @@ export default function Home() {
 
       {/* Templates Showcase Section */}
       <TemplatesCarousel />
+
+      {/* Demo Reel Section */}
+      <div className="w-full max-w-6xl mx-auto px-4 sm:px-8 my-32 relative z-20">
+        <DemoReel />
+      </div>
 
       {/* About Section */}
       <section id="about" className="py-32 border-t border-white/5 scroll-mt-32 relative overflow-hidden">

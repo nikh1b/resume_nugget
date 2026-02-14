@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useUIStore } from "@/store/useUIStore";
 import {
     Popover,
     PopoverContent,
@@ -18,12 +19,14 @@ interface AIRewritePopoverProps {
     onRewrite: (text: string) => void;
     children: React.ReactNode;
     initialText?: string;
+    id?: string;
 }
 
 export function AIRewritePopover({
     onRewrite,
     children,
     initialText = "",
+    id,
 }: AIRewritePopoverProps) {
     const [isOpen, setIsOpen] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -32,6 +35,17 @@ export function AIRewritePopover({
         metric_driven: string;
         concise: string;
     } | null>(null);
+
+    const { activeRewriteTarget, setActiveRewriteTarget } = useUIStore();
+
+    // Remote Trigger Logic
+    useEffect(() => {
+        if (id && activeRewriteTarget === id) {
+            setIsOpen(true);
+            setActiveRewriteTarget(null); // Consume the event
+            toast.info("AI Rewrite activated by GoldenBot!");
+        }
+    }, [activeRewriteTarget, id, setActiveRewriteTarget]);
 
     const handleGenerate = async () => {
         if (!initialText || initialText.length < 5) {

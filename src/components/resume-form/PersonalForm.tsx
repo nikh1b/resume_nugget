@@ -73,21 +73,20 @@ export const PersonalForm = () => {
             <div className="space-y-2">
                 <div className="flex justify-between items-center">
                     <Label htmlFor="summary">Professional Summary</Label>
-                    {personalInfo.summary && (
-                        <AIRewritePopover
-                            initialText={personalInfo.summary}
-                            onRewrite={(text) => updatePersonalInfo({ summary: text })}
+                    <AIRewritePopover
+                        id="summary"
+                        initialText={personalInfo.summary}
+                        onRewrite={(text) => updatePersonalInfo({ summary: text })}
+                    >
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-6 px-2 text-xs text-purple-600 hover:text-purple-700 hover:bg-purple-50"
                         >
-                            <Button
-                                variant="ghost"
-                                size="sm"
-                                className="h-6 px-2 text-xs text-purple-600 hover:text-purple-700 hover:bg-purple-50"
-                            >
-                                <Sparkles className="mr-1 h-3 w-3" />
-                                Improve with AI
-                            </Button>
-                        </AIRewritePopover>
-                    )}
+                            <Sparkles className="mr-1 h-3 w-3" />
+                            Improve with AI
+                        </Button>
+                    </AIRewritePopover>
                 </div>
                 <Textarea
                     id="summary"

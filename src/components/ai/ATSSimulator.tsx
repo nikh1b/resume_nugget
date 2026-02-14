@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { simulateATS } from "@/app/actions/ai";
 import { useResumeStore } from "@/store/useResumeStore";
+import { useUIStore } from "@/store/useUIStore";
 import { Button } from "@/components/ui/button";
 import {
     Dialog,
@@ -25,8 +26,12 @@ interface ATSAnalysis {
 
 export function ATSSimulator() {
     const { resume } = useResumeStore();
+    const { isATSSimulatorOpen, setATSSimulatorOpen } = useUIStore();
     const [loading, setLoading] = useState(false);
     const [analysis, setAnalysis] = useState<ATSAnalysis | null>(null);
+
+    // Sync local open state with global if needed, or just use global for the Dialog open prop
+
 
     const handleAnalyze = async () => {
         setLoading(true);
@@ -43,7 +48,7 @@ export function ATSSimulator() {
     };
 
     return (
-        <Dialog>
+        <Dialog open={isATSSimulatorOpen} onOpenChange={setATSSimulatorOpen}>
             <DialogTrigger asChild>
                 <Button variant="outline" size="sm" className="border-red-500/30 text-red-400 hover:bg-red-500/10 hover:text-red-300">
                     <Skull className="mr-2 h-4 w-4" /> Brutal ATS
