@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
         marginRight: 2,
         marginBottom: 2,
         borderRadius: 2,
-        display: 'inline-block' // React-PDF doesn't strictly support inline-block like web, but text flow works
+        // display: 'inline-block' // Not supported in react-pdf
     }
 });
 

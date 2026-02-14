@@ -20,6 +20,8 @@ const styles = StyleSheet.create({
     item: { marginBottom: 10 },
     itemHeader: { flexDirection: 'row', justifyContent: 'space-between', fontFamily: 'Helvetica-Bold' },
 
+    bold: { fontFamily: 'Helvetica-Bold', fontSize: 10 },
+
     chips: { flexDirection: 'row', flexWrap: 'wrap', gap: 5, marginTop: 5 },
     chip: { border: '1px solid #000', padding: '2 6', fontSize: 8, fontFamily: 'Helvetica-Bold' }
 });

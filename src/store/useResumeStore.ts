@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
 import { Resume } from '@/lib/types';
+import { TemplateName } from '@/components/pdf-templates';
 import { v4 as uuidv4 } from 'uuid'; // We need uuid for generating IDs
 
 interface ResumeState {
@@ -12,8 +13,8 @@ interface ResumeState {
     markAsSaved: () => void;
     updatePersonalInfo: (info: Partial<Resume['personalInfo']>) => void;
     // Template
-    selectedTemplate: 'ivy' | 'modern' | 'creative' | 'minimalist' | 'executive' | 'startup' | 'tech' | 'classic';
-    setTemplate: (template: 'ivy' | 'modern' | 'creative' | 'minimalist' | 'executive' | 'startup' | 'tech' | 'classic') => void;
+    selectedTemplate: TemplateName;
+    setTemplate: (template: TemplateName) => void;
 
     // Education
     addEducation: () => void;
@@ -50,7 +51,7 @@ const initialResume: Resume = {
     projects: [],
 };
 
-const initialTemplate: 'ivy' | 'modern' | 'creative' | 'minimalist' | 'executive' | 'startup' | 'tech' | 'classic' = 'ivy';
+const initialTemplate: TemplateName = 'ivy';
 
 export const useResumeStore = create<ResumeState>()(
     persist(

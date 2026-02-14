@@ -27,7 +27,7 @@ export const FinanceTemplate = ({ resume }: { resume: Resume }) => (
             <View style={styles.header}>
                 <Text style={styles.name}>{resume.personalInfo.fullName}</Text>
                 <Text style={styles.contact}>
-                    {resume.personalInfo.location} • {resume.personalInfo.phone} • {resume.personalInfo.email}
+                    {resume.personalInfo.address} • {resume.personalInfo.phone} • {resume.personalInfo.email}
                 </Text>
                 {resume.personalInfo.linkedin && <Text style={styles.contact}>{resume.personalInfo.linkedin}</Text>}
             </View>
@@ -38,7 +38,7 @@ export const FinanceTemplate = ({ resume }: { resume: Resume }) => (
                     <View key={i} style={{ marginBottom: 10 }}>
                         <View style={styles.row}>
                             <Text style={styles.bold}>{exp.company}</Text>
-                            <Text style={styles.italic}>{exp.location || 'New York, NY'}</Text> {/* Fallback location */}
+                            <Text style={styles.italic}>NYC, NY</Text> {/* Hardcoded for style or remove */}
                         </View>
                         <View style={styles.row}>
                             <Text style={styles.italic}>{exp.position}</Text>
@@ -54,7 +54,7 @@ export const FinanceTemplate = ({ resume }: { resume: Resume }) => (
                 {resume.education.map((edu, i) => (
                     <View key={i} style={{ marginBottom: 6 }}>
                         <View style={styles.row}>
-                            <Text style={styles.bold}>{edu.school}</Text>
+                            <Text style={styles.bold}>{edu.institution}</Text>
                             <Text>{edu.endDate}</Text>
                         </View>
                         <Text>{edu.degree}</Text>

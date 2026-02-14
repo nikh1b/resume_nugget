@@ -101,7 +101,7 @@ export const TemplatesCarousel = () => {
     };
 
     // Get visible items
-    const visibleItems = [];
+    const visibleItems: TemplateName[] = [];
     if (shuffledTemplates.length > 0) {
         for (let i = 0; i < visibleCount; i++) {
             const index = (currentIndex + i) % shuffledTemplates.length;
