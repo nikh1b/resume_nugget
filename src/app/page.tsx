@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { FileText, Zap, Target, Sparkles, ArrowRight, Menu } from 'lucide-react';
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -274,9 +275,12 @@ export default function Home() {
                 <div className="shrink-0 relative">
                   <div className="w-32 h-32 md:w-40 md:h-40 rounded-full bg-gray-800 border-4 border-[#1a1a1a] overflow-hidden shadow-2xl relative">
                     {/* Avatar Placeholder or Initials */}
-                    <div className="w-full h-full flex items-center justify-center bg-[#1a1a1a] text-white font-black text-4xl">
-                      N
-                    </div>
+                    <Image
+                      src="/face.png"
+                      alt="Nikhil"
+                      fill
+                      className="object-cover"
+                    />
                   </div>
                   <motion.div
                     whileHover={{ scale: 1.1 }}
