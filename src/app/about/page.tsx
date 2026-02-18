@@ -1,5 +1,6 @@
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Logo } from '@/components/Logo';
 import { ArrowLeft, Zap, Shield, Heart, Sparkles, Target, ArrowRight } from 'lucide-react';
@@ -144,8 +145,13 @@ export default function AboutPage() {
                             <div className="absolute -bottom-32 -right-32 w-80 h-80 bg-lime-500/10 blur-[100px] rounded-full group-hover:bg-lime-500/15 transition-all duration-700"></div>
 
                             <div className="relative z-10 flex flex-col items-center">
-                                <div className="w-28 h-28 bg-gradient-to-br from-gray-800 to-black rounded-full border-4 border-[#1a1a1a] flex items-center justify-center text-4xl font-black text-white mb-8 shadow-2xl ring-4 ring-white/5">
-                                    N
+                                <div className="w-28 h-28 rounded-full border-4 border-[#1a1a1a] overflow-hidden mb-8 shadow-2xl ring-4 ring-white/5 relative bg-gradient-to-br from-gray-800 to-black">
+                                    <Image
+                                        src="/face.png"
+                                        alt="Nikhil"
+                                        fill
+                                        className="object-cover"
+                                    />
                                 </div>
 
                                 <blockquote className="text-2xl md:text-3xl text-gray-200 font-medium leading-relaxed max-w-3xl mb-12 font-serif italic">
